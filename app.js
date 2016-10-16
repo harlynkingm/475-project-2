@@ -1,10 +1,14 @@
-var app = require('express')();
+var express = require("express");
+var app = express();
 var http = require("http").Server(app);
 var io = require('socket.io')(http);
+var path = require('path');
 
 app.get('/', function(request,response){
 	response.sendFile(__dirname + '/index.html')
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 var usernames = {};
