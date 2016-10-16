@@ -3,6 +3,7 @@ var app = express();
 var http = require("http").Server(app);
 var io = require('socket.io')(http);
 var path = require('path');
+var mongodb = require('mongodb');
 
 app.get('/', function(request,response){
 	response.sendFile(__dirname + '/index.html')
@@ -11,17 +12,18 @@ app.get('/', function(request,response){
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+
 var usernames = {};
 
-const MongoClient = require('mongodb').MongoClient
+var MongoClient = mongodb.MongoClient
 
-MongoClient.connect("mongodb://stresschat:stresschat@ds011943.mlab.com:11943/stresschat", (err, database) =>{
+MongoClient.connect("mongodb://stresschat:stresschat@ds011943.mlab.com:11943/stresschat", function(err, database){
 	if(err){
 		console.log('Unable to connect to the mongoDB server. Error:', err);
 	} else{
 		console.log('Connection established to mongo');
 		var collection = database.collection('users');
-	};
+	}
 
 });
 
