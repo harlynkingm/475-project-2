@@ -2,7 +2,9 @@ $(document).ready(function(){
   var socket = io();
 
   socket.on('connect', function(){
-    socket.emit('adduser', prompt("What's your name?"));
+    username = prompt("Whats your name??");
+    socket.emit('adduser', username);
+    socket.emit('assignRoom', username);
   });
 
   socket.on('disconnected', function(username){

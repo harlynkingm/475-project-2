@@ -35,20 +35,9 @@ chatrooms = {
 	"room5":[]
 };
 
-function findRoom(username){
-	var room;
-	for(room in chatrooms){
-		if(chatrooms[room].length == 2){
-			continue;
-		}
-		else{
-			chatrooms[room].push(username);
-			return room;
-		}
-	}
-};
 
-function newRoom(username, previousRoom){
+
+function assignRoom(username, previousRoom){
 	for(room in chatrooms){
 		if(room == previousRoom){
 			continue;
@@ -74,7 +63,7 @@ function reassignRoom(username){
 		}
 	};
 	chatrooms[roomToClear] = [];
-	room = newRoom(usernameToMove, roomToClear);
+	room = assignRoom(usernameToMove, roomToClear);
 	return [room, usernameToMove];
 };
 
@@ -84,12 +73,15 @@ io.on('connection', function(socket){
 	socket.on('adduser', function(username){
 		socket.username = username;
 		usernames[username] = username;
-		room = findRoom(username);
+		io.sockets.emit('updateusers', usernames);
+	});
+
+	socket.on('assignRoom', function(username){
+		room = assignRoom(username, false);
 		socket.room = room;
 		socket.join(room);
 		socket.emit('updatechat', 'SERVER', 'you have connected to '+ room);
 		socket.broadcast.to(room).emit('updatechat', 'SERVER', username + " has connected");
-		io.sockets.emit('updateusers', usernames);
 	});
 
 	socket.on('chat message', function(msg){
@@ -100,6 +92,7 @@ io.on('connection', function(socket){
 		data = reassignRoom(username);
 		room = data[0];
 		username = data[1];
+		socket.leave(socket.room);
 		socket.username = username;
 		socket.room = room;
 		socket.join(room);
