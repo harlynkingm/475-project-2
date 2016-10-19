@@ -100,6 +100,7 @@ io.on('connection', function(socket){
 		socket.broadcast.to(room).emit('updatechat', 'SERVER', username + " has connected");
 	});
 
+
 	socket.on('disconnect', function(){
 		delete usernames[socket.username];
 		io.sockets.emit('updateusers', usernames);

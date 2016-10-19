@@ -17,6 +17,10 @@ $(document).ready(function(){
     return false;
   });
 
+  $('#nextUser').click(function(){
+    socket.emit('newRoom', username);
+  });
+
   socket.on('updateusers', function(data){
     $("#users").empty();
     $.each(data, function(key,value){
