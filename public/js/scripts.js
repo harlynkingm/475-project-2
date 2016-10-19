@@ -4,8 +4,8 @@ $(document).ready(function(){
   var yourself;
 
   socket.on('connect', function(){
-//    username = prompt("Whats your name??");
-    username = "MAX";
+    username = prompt("Whats your name??");
+//    username = "MAX";
     yourself = username;
     socket.emit('adduser', username);
     socket.emit('assignRoom', username);
@@ -16,9 +16,24 @@ $(document).ready(function(){
   })
 
   $('#send').click(function(){
+    sendMessage();
+  });
+  
+  function sendMessage(){
     if ($('#m').val()){
       socket.emit('chat message', $('#m').val());
       $('#m').val('');
+    }
+  }
+  
+  $(".message-content").keypress(function(e){
+    switch (e.keyCode){
+      case 13:
+        e.preventDefault();
+        sendMessage();
+        break;
+      default:
+        break;
     }
   });
 
