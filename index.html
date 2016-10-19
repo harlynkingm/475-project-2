@@ -1,18 +1,52 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>CMUchat</title>
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/skeleton.css">
     <link rel="stylesheet" href="./css/styles.css">
     <script src="/socket.io/socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="./js/jquery-3.1.0.min.js"></script>
     <script src="./js/scripts.js"></script>
   </head>
   <body>
-    <b>USERS</b>
-    <div id="users"></div>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <div class="sidebar">
+      <div class="sidebar-button">
+        <div class="title">New Partner</div>
+        <div class="image"><img src="./images/icons/plus.png" width=100%></div>
+      </div>
+      <div class="sidebar-button">
+        <div class="title">History</div>
+        <div class="image"><img src="./images/icons/history.png" width=100%></div>
+      </div>
+      <div class="divider"></div>
+      <div class="sidebar-button">
+        <div class="title">Info</div>
+        <div class="image"><img src="./images/icons/info.png" width=100%></div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="header">
+        <div class="title">CMUchat</div>
+      </div>
+      <div class="body">
+        <div id="messages"></div>
+      </div>
+      <div class="message-box">
+        <div class="content">
+          <textarea class="message-content" placeholder="Type a message..." id="m"></textarea>
+        </div>
+        <div class="actions">
+          <div class="message-action" id="send">
+            <img src="./images/icons/arrow.png">
+            <div class="title">SEND</div>
+          </div>
+          <div class="message-action" id="like">
+            <img src="./images/icons/like.png">
+            <div class="title">LIKE</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
