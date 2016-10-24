@@ -5,7 +5,7 @@ $(document).ready(function(){
 
   socket.on('connect', function(){
 //    username = prompt("Whats your name??");
-    username = "MAX";
+    username = prompt("whats your name?");
     yourself = username;
     socket.emit('adduser', username);
     socket.emit('assignRoom', username);
