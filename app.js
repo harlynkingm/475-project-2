@@ -17,6 +17,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var usernames = {};
 
+
+/*
 var MongoClient = mongodb.MongoClient
 
 MongoClient.connect("mongodb://stresschat:stresschat@ds011943.mlab.com:11943/stresschat", function(err, database){
@@ -28,6 +30,8 @@ MongoClient.connect("mongodb://stresschat:stresschat@ds011943.mlab.com:11943/str
 	}
 
 });
+
+*/
 
 chatrooms = {
 	"room1":[],
