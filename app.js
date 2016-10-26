@@ -51,7 +51,7 @@ io.on('connection', function(socket){
 			queue.push(socket.id);
 			socket.emit('updatechat', socket.id, 'Waiting for a partner');
 		}else{
-			partner = queue.pop();
+			partner = queue.shift();
 			socket.partner = partner;
 			socket.emit('updatechat', socket.id, 'Partner found');
 			socket.broadcast.to(socket.partner).emit('assignPartner', socket.id);
@@ -61,6 +61,7 @@ io.on('connection', function(socket){
 
 	socket.on('acceptPartner', function(partner){
 		socket.partner = partner;
+		socket.emit('updatechat', socket.id, 'Partner found');
 	});
 
 	socket.on('chat message', function(msg){
@@ -70,7 +71,7 @@ io.on('connection', function(socket){
 
 
 	socket.on('disconnect', function(){
-		socket.broadcast.to(socket.partner).emit('updatechat', socket.id, "Your partner has left the chat");
+		socket.broadcast.to(socket.partner).emit('updatechat', socket.partner, "Your partner has left the chat");
 		socket.broadcast.to(socket.partner).emit('newPartner');
 	});
 
@@ -80,8 +81,7 @@ io.on('connection', function(socket){
 	})
 
 	socket.on('deleteConnectionToPartner', function(){
-		console.log('GOT HERE');
-		socket.partner = null;
+		socket.partner = "";
 	})
 });
 
