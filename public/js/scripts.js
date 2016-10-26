@@ -3,17 +3,28 @@ $(document).ready(function(){
   
   var yourself;
   var lastUser;
+  var person;
 
   socket.on('connect', function(){
-    username = prompt("Whats your name??");
-//    username = "MAX";
-    yourself = username;
-    socket.emit('adduser', username);
-    socket.emit('assignRoom', username);
+    socket.emit('adduser');
   });
 
-  socket.on('disconnected', function(username){
-    socket.emit('reassignRoom', username);
+  socket.on('giveID', function(id){
+    yourself = id;
+    socket.emit('connectToRoom', false);
+  })
+
+  socket.on('assignPartner', function(partner){
+    person = partner;
+    socket.emit('acceptPartner', partner);
+  })
+
+  socket.on('newPartner', function(){
+    socket.emit('connectToRoom', person);
+  })
+
+  socket.on('deleteConnectionToPartner', function(){
+    socket.emit('deleteConnectionToPartner');
   })
 
   $('#send').click(function(){
@@ -30,6 +41,12 @@ $(document).ready(function(){
       socket.emit('chat message', message);
     }
   }
+
+  $("#newPartner").click(function(){
+    console.log(person);
+    socket.emit('connectToRoom', person);
+    socket.emit('disconnectingFromPartner', person);
+  });
   
   function sendHappy(){
     var happy = ["You're awesome!", "Yay!", "Woohoo!", "Wow!", "Amazing!", "Woot!", "Nice!", "Way to go!", "Cool!", "Sweet!", "Fantastic!", "Great!", "Wonderful!", "Majestic!", "Marvelous!", "You rock!", "Splendid!", "Super!", "Swell!", "Brilliant!", "Impressive!", "Very cool!", "Fabulous!", "Excellent!", "Outstanding!", "Perfect!", "Terrific!", "Splendiferous!", "Dazzling!", "Wicked!", "Delightful!"];
