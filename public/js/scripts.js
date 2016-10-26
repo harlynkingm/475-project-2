@@ -65,26 +65,29 @@ $(document).ready(function(){
         break;
     }
   });
-
-//  socket.on('updateusers', function(data){
-//    $("#users").empty();
-//    $.each(data, function(key,value){
-//      $('#users').append("<div>" + key + "</div>");
-//    })
-//  });
   
   function addClasses(obj, classes){
     for(var i = 0; i < classes.length; i++){
       $(obj).addClass(classes[i]);
     };
   };
+  
+  function scrollBottom(){
+    $(".main .body").scrollTop($("#messages").height());
+  }
+  
+  $("#messages").on("load", function(){
+    scrollBottom();
+  });
 
   socket.on('updatechat', function(username, msg){
+    // Assigns classes to message text
     var parentClasses = ["msg-container", "row"];
     var childClasses = ["message"];
     if (username == yourself) childClasses.push("message-you");
     if (username == lastUser) childClasses.push("message-nospace");
     
+    // Prepares message div
     var parent = $("<div></div>");
     var child = $("<div></div>");
     parent.append(child);
@@ -92,8 +95,39 @@ $(document).ready(function(){
     addClasses(parent, parentClasses);
     addClasses(child, childClasses);
     
+    // Adds message to body
     $("#messages").append(parent);
-    $(".main .body").scrollTop($(".main .body").height());
+    
+    // Scans message for image links
+    var scan = msg.split();
+    for (var i = 0; i < scan.length; i++){
+      if (scan[i].endsWith('.gif') || scan[i].endsWith('.jpg') || scan[i].endsWith('.png')){
+        
+        // If image is found, prepare the parent
+        var imgParent = $("<div></div>");
+        addClasses(imgParent, ["row"]);
+        
+        // Gives the image a clickable link
+        var imgLink = $("<a></a>");
+        imgLink.attr("href", scan[i]).attr("target", "_blank");
+        
+        // Prepares the image in html
+        var imgChild = $("<img>");
+        imgChild.attr("src", scan[i]);
+        var imgChildClasses = ["message-img"];
+        if (username == yourself) imgChildClasses.push("message-img-you");
+        if (username == lastUser) imgChildClasses.push("message-nospace");
+        addClasses(imgChild, imgChildClasses);
+        
+        // Adds the image to the page
+        imgParent.append(imgLink);
+        imgLink.append(imgChild);
+        $("#messages").append(imgParent);
+      }
+    }
+    
+    // Scrolls the page to the bottom
+    scrollBottom();
     lastUser = username;
   });
 

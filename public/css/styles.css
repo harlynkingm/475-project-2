@@ -103,6 +103,17 @@
   margin-right: 15px;
 }
 
+.message-img {
+  margin-top: 8px;
+  display: inline-block;
+  max-width: 50%;
+}
+
+.message-img-you {
+  float: right;
+  margin-right: 15px;
+}
+
 .message-nospace {
   margin-top: 4px;
 }
