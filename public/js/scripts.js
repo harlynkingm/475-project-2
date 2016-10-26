@@ -2,6 +2,7 @@ $(document).ready(function(){
   var socket = io();
   
   var yourself;
+  var lastUser;
 
   socket.on('connect', function(){
     username = prompt("Whats your name??");
@@ -16,21 +17,32 @@ $(document).ready(function(){
   })
 
   $('#send').click(function(){
-    sendMessage();
+    sendMessage($('#m').val());
+    $('#m').val('');
   });
   
-  function sendMessage(){
-    if ($('#m').val()){
-      socket.emit('chat message', $('#m').val());
-      $('#m').val('');
+  $('#happy').click(function(){
+    sendHappy();
+  });
+  
+  function sendMessage(message){
+    if (message){
+      socket.emit('chat message', message);
     }
+  }
+  
+  function sendHappy(){
+    var happy = ["You're awesome!", "Yay!", "Woohoo!", "Wow!", "Amazing!", "Woot!", "Nice!", "Way to go!", "Cool!", "Sweet!", "Fantastic!", "Great!", "Wonderful!", "Majestic!", "Marvelous!", "You rock!", "Splendid!", "Super!", "Swell!", "Brilliant!", "Impressive!", "Very cool!", "Fabulous!", "Excellent!", "Outstanding!", "Perfect!", "Terrific!", "Splendiferous!", "Dazzling!", "Wicked!", "Delightful!"];
+    var happyInt = Math.floor(Math.random() * happy.length);
+    sendMessage(happy[happyInt]);
   }
   
   $(".message-content").keypress(function(e){
     switch (e.keyCode){
       case 13:
         e.preventDefault();
-        sendMessage();
+        sendMessage($('#m').val());
+        $('#m').val('');
         break;
       default:
         break;
@@ -43,14 +55,29 @@ $(document).ready(function(){
 //      $('#users').append("<div>" + key + "</div>");
 //    })
 //  });
+  
+  function addClasses(obj, classes){
+    for(var i = 0; i < classes.length; i++){
+      $(obj).addClass(classes[i]);
+    };
+  };
 
   socket.on('updatechat', function(username, msg){
-    if (username == yourself){
-      $('#messages').append("<div class='msg-container'><div class='message message-you'>" + msg + "</div></div>");
-    } else {
-      $('#messages').append("<div class='msg-container'><div class='message'>" + msg + "</div></div>");
-    }
-    $(".main .body").scrollTop($(".main .body").height())
+    var parentClasses = ["msg-container", "row"];
+    var childClasses = ["message"];
+    if (username == yourself) childClasses.push("message-you");
+    if (username == lastUser) childClasses.push("message-nospace");
+    
+    var parent = $("<div></div>");
+    var child = $("<div></div>");
+    parent.append(child);
+    child.text(msg);
+    addClasses(parent, parentClasses);
+    addClasses(child, childClasses);
+    
+    $("#messages").append(parent);
+    $(".main .body").scrollTop($(".main .body").height());
+    lastUser = username;
   });
 
 });

@@ -75,6 +75,7 @@
 }
 
 .main .body {
+  margin-top: 8px;
   margin-left: 15px;
   overflow-y: scroll;
   flex: 2;
@@ -91,16 +92,19 @@
   padding-right: 12px;
   border-radius: 6px;
   margin-top: 8px;
-  margin-bottom: 8px;
   display: inline-block;
+  max-width: 50%;
 }
 
 .message-you {
   background-color: #5696FF;
   color: #fff;
   float: right;
-  clear: right;
   margin-right: 15px;
+}
+
+.message-nospace {
+  margin-top: 4px;
 }
 
 .main .message-box {
@@ -137,14 +141,24 @@
 }
 
 .message-action {
-  padding-top: 9px;
-  padding-bottom: 9px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
 .message-action .title {
-  padding-left: 30px;
   color: #5696FF;
+  flex: 1;
+  line-height: 48px;
+}
+
+.message-action .image {
+  max-width: 30px;
+  text-align: center;
+  display: inline-block;
+}
+
+.message-action .image img {
+  vertical-align: middle;
 }
