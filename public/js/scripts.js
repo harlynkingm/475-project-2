@@ -3,7 +3,7 @@ $(document).ready(function(){
   
   var yourself;
   var lastUser;
-  var person;
+  var person = "";
 
   socket.on('connect', function(){
     socket.emit('adduser');
@@ -43,9 +43,10 @@ $(document).ready(function(){
   }
 
   $("#newPartner").click(function(){
-    console.log(person);
-    socket.emit('connectToRoom', person);
-    socket.emit('disconnectingFromPartner', person);
+    if(person){
+      socket.emit('connectToRoom', person);
+      socket.emit('disconnectingFromPartner', person);
+    }
   });
   
   function sendHappy(){
