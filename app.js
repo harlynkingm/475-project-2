@@ -33,87 +33,56 @@ MongoClient.connect("mongodb://stresschat:stresschat@ds011943.mlab.com:11943/str
 
 */
 
-chatrooms = {
-	"room1":[],
-	"room2":[],
-	"room3":[],
-	"room4":[],
-	"room5":[]
-};
+queue = [];
 
 
-
-function assignRoom(username, previousRoom){
-	for(room in chatrooms){
-		if(room == previousRoom){
-			continue;
-		} else if(chatrooms[room].length == 2){
-			continue;
-		} else{
-			chatrooms[room].push(username);
-			return room;
-		}
-	}
-}
-
-function reassignRoom(username){
-	for(room in chatrooms){
-		if(chatrooms[room][0] == username){
-			usernameToMove = chatrooms[room][1];
-			roomToClear = room;
-			break;
-		} else if(chatrooms[room][1] == username){
-			usernameToMove = chatrooms[room][0];
-			roomToClear = room;
-			break;
-		}
-	};
-	chatrooms[roomToClear] = [];
-	room = assignRoom(usernameToMove, roomToClear);
-	return [room, usernameToMove];
-};
 
 
 io.on('connection', function(socket){
 
-	socket.on('adduser', function(username){
-		socket.username = username;
-		usernames[username] = username;
-		io.sockets.emit('updateusers', usernames);
+	socket.on('adduser', function(){
+		socket.emit('giveID', socket.id)
+		socket.join(socket.id);
+		socket.emit('updatechat', socket.id, 'You have connected');
 	});
 
-	socket.on('assignRoom', function(username){
-		room = assignRoom(username, false);
-		socket.room = room;
-		socket.join(room);
-		socket.emit('updatechat', 'SERVER', 'you have connected to '+ room);
-		socket.broadcast.to(room).emit('updatechat', 'SERVER', username + " has connected");
+	socket.on('connectToRoom', function(previousPartner){
+		if(queue.length == 0 || queue[0] == previousPartner){
+			queue.push(socket.id);
+			socket.emit('updatechat', socket.id, 'Waiting for a partner');
+		}else{
+			partner = queue.pop();
+			socket.partner = partner;
+			socket.emit('updatechat', socket.id, 'Partner found');
+			socket.broadcast.to(socket.partner).emit('assignPartner', socket.id);
+		};
+	});
+
+
+	socket.on('acceptPartner', function(partner){
+		socket.partner = partner;
 	});
 
 	socket.on('chat message', function(msg){
-		io.sockets.in(socket.room).emit('updatechat', socket.username, msg);
-	});
-
-	socket.on('reassignRoom', function(username){
-		data = reassignRoom(username);
-		room = data[0];
-		username = data[1];
-		socket.leave(socket.room);
-		socket.username = username;
-		socket.room = room;
-		socket.join(room);
-		socket.emit('updatechat', 'SERVER', 'you have been relocated to ' + room);
-		socket.broadcast.to(room).emit('updatechat', 'SERVER', username + " has connected");
+		io.sockets.in(socket.partner).emit('updatechat', socket.id, msg);
+		io.sockets.in(socket.id).emit('updatechat', socket.id, msg);
 	});
 
 
 	socket.on('disconnect', function(){
-		delete usernames[socket.username];
-		io.sockets.emit('updateusers', usernames);
-		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + " has left the chat");
-		socket.broadcast.to(socket.room).emit('disconnected', socket.username);
-		socket.leave(socket.room);
+		socket.broadcast.to(socket.partner).emit('updatechat', socket.id, "Your partner has left the chat");
+		socket.broadcast.to(socket.partner).emit('newPartner');
 	});
+
+	socket.on('disconnectingFromPartner', function(id){
+		socket.broadcast.to(id).emit('deleteConnectionToPartner');
+		socket.broadcast.to(id).emit('newPartner');
+	})
+
+	socket.on('deleteConnectionToPartner', function(){
+		console.log('GOT HERE');
+		socket.partner = null;
+	})
 });
 
 http.listen(8000, function(){

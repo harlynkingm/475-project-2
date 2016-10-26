@@ -2,17 +2,28 @@ $(document).ready(function(){
   var socket = io();
   
   var yourself;
+  var person;
 
   socket.on('connect', function(){
-//    username = prompt("Whats your name??");
-    username = prompt("whats your name?");
-    yourself = username;
-    socket.emit('adduser', username);
-    socket.emit('assignRoom', username);
+    socket.emit('adduser');
   });
 
-  socket.on('disconnected', function(username){
-    socket.emit('reassignRoom', username);
+  socket.on('giveID', function(id){
+    yourself = id;
+    socket.emit('connectToRoom', false);
+  })
+
+  socket.on('assignPartner', function(partner){
+    person = partner;
+    socket.emit('acceptPartner', partner);
+  })
+
+  socket.on('newPartner', function(){
+    socket.emit('connectToRoom', person);
+  })
+
+  socket.on('deleteConnectionToPartner', function(){
+    socket.emit('deleteConnectionToPartner');
   })
 
   $('#send').click(function(){
@@ -25,6 +36,12 @@ $(document).ready(function(){
       $('#m').val('');
     }
   }
+
+  $("#newPartner").click(function(){
+    console.log(person);
+    socket.emit('connectToRoom', person);
+    socket.emit('disconnectingFromPartner', person);
+  });
   
   $(".message-content").keypress(function(e){
     switch (e.keyCode){
@@ -37,13 +54,6 @@ $(document).ready(function(){
     }
   });
 
-
-//  socket.on('updateusers', function(data){
-//    $("#users").empty();
-//    $.each(data, function(key,value){
-//      $('#users').append("<div>" + key + "</div>");
-//    })
-//  });
 
 
   socket.on('updatechat', function(username, msg){
