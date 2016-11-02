@@ -75,8 +75,7 @@
 }
 
 .main .body {
-  margin-top: 8px;
-  margin-left: 15px;
+  padding: 8px 15px 15px 15px;
   overflow-y: scroll;
   flex: 2;
 }
