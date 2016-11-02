@@ -72,6 +72,13 @@
   line-height: 60px;
   font-size: 18px;
   font-weight: 600;
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.main .header .u-right {
+  font-size: 12px;
 }
 
 .main .body {
@@ -237,6 +244,10 @@
 
 .u-center {
   text-align: center;
+}
+
+.u-right {
+  float: right;
 }
 
 .border-bottom {
