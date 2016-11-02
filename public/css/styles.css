@@ -93,6 +93,7 @@
   margin-top: 8px;
   display: inline-block;
   max-width: 50%;
+  word-wrap: break-word;
 }
 
 .message-you {
@@ -119,7 +120,22 @@
 
 .message-img-you {
   float: right;
-  margin-right: 15px;
+}
+
+.message-happy {
+  background-color: #fff;
+  font-size: 20px;
+  margin-top: 12px !important;
+  margin-bottom: 4px;
+  padding-right: 0;
+}
+
+.message-happy-you {
+  color: #5696FF;
+}
+
+.message-happy-nospace {
+  margin-top: 4px !important;
 }
 
 .message-nospace {

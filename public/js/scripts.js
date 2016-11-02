@@ -37,7 +37,7 @@ $(document).ready(function(){
   });
   
   function sendMessage(message){
-    if (message.startsWith("SERVER: ")){
+    if (message.startsWith("SERVER: ") || message.startsWith("HAPPY: ")){
       message = " " + message;
     }
     if (message){
@@ -55,7 +55,7 @@ $(document).ready(function(){
   function sendHappy(){
     var happy = ["You're awesome!", "Yay!", "Woohoo!", "Wow!", "Amazing!", "Woot!", "Nice!", "Way to go!", "Cool!", "Sweet!", "Fantastic!", "Great!", "Wonderful!", "Majestic!", "Marvelous!", "You rock!", "Splendid!", "Super!", "Swell!", "Brilliant!", "Impressive!", "Very cool!", "Fabulous!", "Excellent!", "Outstanding!", "Perfect!", "Terrific!", "Splendiferous!", "Dazzling!", "Wicked!", "Delightful!"];
     var happyInt = Math.floor(Math.random() * happy.length);
-    sendMessage(happy[happyInt]);
+    socket.emit('chat message', "HAPPY: " + happy[happyInt]);
   }
   
   $(".message-content").keypress(function(e){
@@ -80,10 +80,6 @@ $(document).ready(function(){
     $(".main .body").scrollTop($("#messages").height());
   }
   
-  $("#messages").on("load", function(){
-    scrollBottom();
-  });
-  
   $("#info").on("click", function(){
     $("#info").fadeOut();
   });
@@ -93,11 +89,13 @@ $(document).ready(function(){
   });
 
   socket.on('updatechat', function(username, msg){
+    var isYou = (username == yourself);
+    
     // Assigns classes to message text
     var parentClasses = ["msg-container", "row"];
     var childClasses = ["message"];
-    if (username == yourself){
-      if (msg.startsWith('SERVER: ')){
+    if (isYou){
+      if (msg.startsWith("SERVER: ")){
         childClasses.push("message-server");
         msg = msg.split("SERVER: ")[1];
       } else {
@@ -105,6 +103,13 @@ $(document).ready(function(){
       }
     }
     if (username == lastUser) childClasses.push("message-nospace");
+    if (msg.startsWith("HAPPY: ")){
+      childClasses.push("message-happy");
+      msg = msg.split("HAPPY: ")[1];
+      if (isYou){
+        childClasses.push("message-happy-you");
+      }
+    }
     
     // Prepares message div
     var parent = $("<div></div>");
@@ -142,6 +147,11 @@ $(document).ready(function(){
         imgParent.append(imgLink);
         imgLink.append(imgChild);
         $("#messages").append(imgParent);
+        
+        // Scrolls page down once the image is loaded  
+        $(imgParent).imagesLoaded( function(){
+          scrollBottom();
+        });
       }
     }
     
