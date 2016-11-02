@@ -12,7 +12,6 @@ $(document).ready(function(){
 
   socket.on('connectedUsers', function(count){
     numOfConnected = count;
-    console.log(numOfConnected);
   })
 
   socket.on('giveID', function(id){
