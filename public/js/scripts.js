@@ -3,7 +3,7 @@ $(document).ready(function(){
   
   var yourself;
   var lastUser;
-  var person = "";
+  myPartner = false;
   var numOfConnected;
 
   socket.on('connect', function(){
@@ -20,11 +20,11 @@ $(document).ready(function(){
   })
 
   socket.on('assignPartner', function(partner){
-    person = partner;
+    myPartner = partner;
     socket.emit('acceptPartner', partner);
   })
 
-  socket.on('newPartner', function( partner){
+  socket.on('newPartner', function(partner){
     socket.emit('connectToRoom', partner);
   })
 
@@ -48,9 +48,10 @@ $(document).ready(function(){
   }
 
   $("#newPartner").click(function(){
-    if(person){
-      socket.emit('connectToRoom', person);
-      socket.emit('disconnectingFromPartner', person);
+    if(myPartner){
+      socket.emit('connectToRoom', myPartner);
+      socket.emit('disconnectingFromPartner', myPartner);
+      myPartner = false;
     }
   });
   
