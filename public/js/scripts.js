@@ -4,10 +4,15 @@ $(document).ready(function(){
   var yourself;
   var lastUser;
   var person = "";
+  var numOfConnected;
 
   socket.on('connect', function(){
     socket.emit('adduser');
   });
+
+  socket.on('connectedUsers', function(count){
+    numOfConnected = count;
+  })
 
   socket.on('giveID', function(id){
     yourself = id;
@@ -19,13 +24,10 @@ $(document).ready(function(){
     socket.emit('acceptPartner', partner);
   })
 
-  socket.on('newPartner', function(){
-    socket.emit('connectToRoom', person);
+  socket.on('newPartner', function( partner){
+    socket.emit('connectToRoom', partner);
   })
 
-  socket.on('deleteConnectionToPartner', function(){
-    socket.emit('deleteConnectionToPartner');
-  })
 
   $('#send').click(function(){
     sendMessage($('#m').val());

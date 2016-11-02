@@ -34,6 +34,7 @@ MongoClient.connect("mongodb://stresschat:stresschat@ds011943.mlab.com:11943/str
 */
 
 queue = [];
+connectedCounter = 0;
 
 
 
@@ -41,6 +42,10 @@ queue = [];
 io.on('connection', function(socket){
 
 	socket.on('adduser', function(){
+		// Keep track of connected
+		connectedCounter++;
+		io.sockets.emit('connectedUsers', connectedCounter);
+		// So client has their own id, then join their own channel
 		socket.emit('giveID', socket.id)
 		socket.join(socket.id);
 		socket.emit('updatechat', socket.id, 'SERVER: You have connected!');
@@ -48,41 +53,51 @@ io.on('connection', function(socket){
 
 	socket.on('connectToRoom', function(previousPartner){
 		if(queue.length == 0 || queue[0] == previousPartner){
+			// Should never be more than one, so if its your previous, just put yourself on queue
 			queue.push(socket.id);
 			socket.emit('updatechat', socket.id, 'SERVER: Waiting for a partner...');
 		}else{
+			// Grab a partner from queue
 			partner = queue.shift();
 			socket.partner = partner;
 			socket.emit('updatechat', socket.id, 'SERVER: Partner found!');
+			// Must send to partner so they know who their new partner is
 			socket.broadcast.to(socket.partner).emit('assignPartner', socket.id);
 		};
 	});
 
 
 	socket.on('acceptPartner', function(partner){
+		// Set socket.partner so it can now chat with them
 		socket.partner = partner;
 		socket.emit('updatechat', socket.id, 'SERVER: Partner found!');
 	});
 
 	socket.on('chat message', function(msg){
+		// Update theirs and my own chat
 		io.sockets.in(socket.partner).emit('updatechat', socket.id, msg);
 		io.sockets.in(socket.id).emit('updatechat', socket.id, msg);
 	});
 
 
 	socket.on('disconnect', function(){
-		socket.broadcast.to(socket.partner).emit('updatechat', socket.partner, "SERVER: Your partner has left the chat.");
-		socket.broadcast.to(socket.partner).emit('newPartner');
+		connectedCounter--;
+		io.sockets.emit('connectedUsers', connectedCounter);
+		// Must get rid of solo people from queue when they disconnect
+		if(socket.id == queue[0]){
+			index = queue.indexOf(socket.id);
+			queue.splice(index, 1);
+		}else{
+			socket.broadcast.to(socket.partner).emit('updatechat', socket.partner, "SERVER: Your partner has left the chat.");
+			socket.broadcast.to(socket.partner).emit('newPartner', socket.id);
+		};
 	});
 
-	socket.on('disconnectingFromPartner', function(id){
-		socket.broadcast.to(id).emit('deleteConnectionToPartner');
+	socket.on('disconnectingFromPartner', function(id){		
+		delete socket.partner
 		socket.broadcast.to(id).emit('newPartner');
 	})
 
-	socket.on('deleteConnectionToPartner', function(){
-		socket.partner = "";
-	})
 });
 
 http.listen(8000, function(){
