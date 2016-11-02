@@ -83,6 +83,10 @@ $(document).ready(function(){
     $(".main .body").scrollTop($("#messages").height());
   }
   
+  $(window).on("resize", function(){
+    scrollBottom();
+  });
+  
   $("#info").on("click", function(){
     $("#info").fadeOut();
   });
