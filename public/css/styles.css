@@ -20,6 +20,11 @@
   text-align: center;
 }
 
+.title a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .sidebar {
   background-color: #353535;
   height: 100vh;
@@ -254,6 +259,15 @@
 
 .u-right {
   float: right;
+}
+
+.u-noselect {
+  cursor: default;
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
 
 .border-bottom {

@@ -112,6 +112,7 @@ $(document).ready(function(){
     if (username == lastUser) childClasses.push("message-nospace");
     if (msg.startsWith("HAPPY: ")){
       childClasses.push("message-happy");
+      childClasses.push("u-noselect");
       msg = msg.split("HAPPY: ")[1];
       if (isYou){
         childClasses.push("message-happy-you");
