@@ -173,3 +173,47 @@
 .message-action .image img {
   vertical-align: middle;
 }
+
+.popup-bg {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.center-box {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.33);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.center-box-content {
+  padding: 30px;
+  width: 25vw;
+  min-width: 300px;
+}
+
+.center-box .title {
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+.center-box p {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
+.u-center {
+  text-align: center;
+}
+
+.border-bottom {
+  border-bottom: 1.5px solid #737373;
+}

@@ -80,6 +80,14 @@ $(document).ready(function(){
   $("#messages").on("load", function(){
     scrollBottom();
   });
+  
+  $("#info").on("click", function(){
+    $("#info").fadeOut();
+  });
+  
+  $("#infoButton").on("click", function(){
+    $("#info").fadeIn();
+  });
 
   socket.on('updatechat', function(username, msg){
     // Assigns classes to message text
