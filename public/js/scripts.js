@@ -90,6 +90,10 @@ $(document).ready(function(){
   $("#infoButton").on("click", function(){
     $("#info").fadeIn();
   });
+  
+  socket.on('connectedUsers', function(count){
+    $("#usercount").text(count);
+  });
 
   socket.on('updatechat', function(username, msg){
     var isYou = (username == yourself);
