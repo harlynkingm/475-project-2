@@ -10,6 +10,12 @@
   font-weight: 500;
 }
 
+@font-face {
+  font-family: 'Avenir';
+  src: url('../font/Avenir-Heavy.otf') format('opentype');
+  font-weight: 700;
+}
+
 .title {
   text-align: center;
 }
