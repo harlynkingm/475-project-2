@@ -54,14 +54,15 @@ io.on('connection', function(socket){
 	socket.on('connectToRoom', function(previousPartner){
 		if(queue.length == 0 || queue[0] == previousPartner){
 			// Should never be more than one, so if its your previous, just put yourself on queue
+			delete socket.partner;
 			queue.push(socket.id);
 			socket.emit('updatechat', socket.id, 'SERVER: Waiting for a partner...');
 		}else{
 			// Grab a partner from queue
 			partner = queue.shift();
 			socket.partner = partner;
-			socket.emit('updatechat', socket.id, 'SERVER: Partner found!');
 			// Must send to partner so they know who their new partner is
+			socket.emit('assignPartner', socket.partner);
 			socket.broadcast.to(socket.partner).emit('assignPartner', socket.id);
 		};
 	});
@@ -93,9 +94,11 @@ io.on('connection', function(socket){
 		};
 	});
 
-	socket.on('disconnectingFromPartner', function(id){		
-		delete socket.partner
-		socket.broadcast.to(id).emit('newPartner');
+	socket.on('disconnectingFromPartner', function(id){	
+		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: You have left your partner');
+		socket.broadcast.to(socket.partner).emit('updatechat', socket.partner, "SERVER: Your partner has left the chat.");
+		delete socket.partner;
+		socket.broadcast.to(id).emit('newPartner', socket.id);
 	})
 
 });

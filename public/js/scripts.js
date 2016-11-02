@@ -49,8 +49,8 @@ $(document).ready(function(){
 
   $("#newPartner").click(function(){
     if(myPartner){
-      socket.emit('connectToRoom', myPartner);
       socket.emit('disconnectingFromPartner', myPartner);
+      socket.emit('connectToRoom', myPartner);
       myPartner = false;
     }
   });
