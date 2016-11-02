@@ -37,6 +37,9 @@ $(document).ready(function(){
   });
   
   function sendMessage(message){
+    if (message.startsWith("SERVER: ")){
+      message = " " + message;
+    }
     if (message){
       socket.emit('chat message', message);
     }
@@ -93,7 +96,14 @@ $(document).ready(function(){
     // Assigns classes to message text
     var parentClasses = ["msg-container", "row"];
     var childClasses = ["message"];
-    if (username == yourself) childClasses.push("message-you");
+    if (username == yourself){
+      if (msg.startsWith('SERVER: ')){
+        childClasses.push("message-server");
+        msg = msg.split("SERVER: ")[1];
+      } else {
+        childClasses.push("message-you");
+      }
+    }
     if (username == lastUser) childClasses.push("message-nospace");
     
     // Prepares message div

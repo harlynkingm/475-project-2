@@ -43,17 +43,17 @@ io.on('connection', function(socket){
 	socket.on('adduser', function(){
 		socket.emit('giveID', socket.id)
 		socket.join(socket.id);
-		socket.emit('updatechat', socket.id, 'You have connected');
+		socket.emit('updatechat', socket.id, 'SERVER: You have connected!');
 	});
 
 	socket.on('connectToRoom', function(previousPartner){
 		if(queue.length == 0 || queue[0] == previousPartner){
 			queue.push(socket.id);
-			socket.emit('updatechat', socket.id, 'Waiting for a partner');
+			socket.emit('updatechat', socket.id, 'SERVER: Waiting for a partner...');
 		}else{
 			partner = queue.shift();
 			socket.partner = partner;
-			socket.emit('updatechat', socket.id, 'Partner found');
+			socket.emit('updatechat', socket.id, 'SERVER: Partner found!');
 			socket.broadcast.to(socket.partner).emit('assignPartner', socket.id);
 		};
 	});
@@ -61,7 +61,7 @@ io.on('connection', function(socket){
 
 	socket.on('acceptPartner', function(partner){
 		socket.partner = partner;
-		socket.emit('updatechat', socket.id, 'Partner found');
+		socket.emit('updatechat', socket.id, 'SERVER: Partner found!');
 	});
 
 	socket.on('chat message', function(msg){
@@ -71,7 +71,7 @@ io.on('connection', function(socket){
 
 
 	socket.on('disconnect', function(){
-		socket.broadcast.to(socket.partner).emit('updatechat', socket.partner, "Your partner has left the chat");
+		socket.broadcast.to(socket.partner).emit('updatechat', socket.partner, "SERVER: Your partner has left the chat.");
 		socket.broadcast.to(socket.partner).emit('newPartner');
 	});
 

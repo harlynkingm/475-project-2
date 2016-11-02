@@ -103,6 +103,16 @@
   margin-right: 15px;
 }
 
+.message-server {
+  background-color: rgba(0, 0, 0, 0);
+  color: rgb(34, 34, 34);
+  float: none;
+  text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .message-img {
   margin-top: 8px;
   display: inline-block;
