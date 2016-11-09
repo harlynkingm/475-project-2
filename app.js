@@ -79,6 +79,14 @@ io.on('connection', function(socket){
 		io.sockets.in(socket.partner).emit('updatechat', socket.id, msg);
 		io.sockets.in(socket.id).emit('updatechat', socket.id, msg);
 	});
+  
+    socket.on('start-typing', function(){
+      io.sockets.in(socket.partner).emit('start-typing');
+    });
+  
+    socket.on('stop-typing', function(){
+      io.sockets.in(socket.partner).emit('stop-typing');
+    });
 
 
 	socket.on('disconnect', function(){

@@ -4,6 +4,7 @@ $(document).ready(function(){
   var lastUser;
   myPartner = false;
   var numOfConnected;
+  var typing = false;
   
   $("#startButton").on("click", function(){
     
@@ -56,9 +57,21 @@ $(document).ready(function(){
           e.preventDefault();
           sendMessage($('#m').val());
           $('#m').val('');
+          socket.emit('stop-typing');
           break;
         default:
           break;
+      }
+    });
+    
+    
+    $("#m").on('input', function(){
+      if ($(this).val() != '' && !typing){
+        socket.emit('start-typing');
+        typing = true;
+      } else if ($(this).val() == '' && typing){
+        socket.emit('stop-typing');
+        typing = false;
       }
     });
 
@@ -104,6 +117,22 @@ $(document).ready(function(){
 
     socket.on('newPartner', function(partner){
       socket.emit('connectToRoom', partner);
+    })
+    
+    socket.on('start-typing', function(){
+      var parentClasses = ["msg-container", "row", "u-noselect", "message-typing"];
+      var childClasses = ["message"];
+      var parent = $("<div></div>");
+      var child = $("<img></img>");
+      parent.append(child);
+      child.attr("src", "./images/icons/ellipsis.svg");
+      addClasses(parent, parentClasses);
+      addClasses(child, childClasses);
+      $("#messages").append(parent);
+    })
+    
+    socket.on('stop-typing', function(){
+      $(".message-typing").remove();
     })
 
 
