@@ -103,7 +103,7 @@ io.on('connection', function(socket){
     });
 
 	socket.on('message myself', function(){
-		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: No available partners at the moment');
+		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: No available partners at the moment.');
 	})
 
 
@@ -121,7 +121,7 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('disconnectingFromPartner', function(id){	
-		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: You have left your partner');
+		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: You have left your partner.');
 		socket.broadcast.to(id).emit('updatechat', id, "SERVER: Your partner has left the chat.");
 		delete socket.partner;
 		socket.broadcast.to(id).emit('newPartner', socket.id);

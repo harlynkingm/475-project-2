@@ -151,6 +151,7 @@ $(document).ready(function(){
       if (isYou){
         if (msg.startsWith("SERVER: ")){
           childClasses.push("message-server");
+          childClasses.push("u-noselect");
           msg = msg.split("SERVER: ")[1];
         } else {
           childClasses.push("message-you");
@@ -178,7 +179,7 @@ $(document).ready(function(){
       $("#messages").append(parent);
 
       // Scans message for image links
-      var scan = msg.split();
+      var scan = msg.split(' ');
       for (var i = 0; i < scan.length; i++){
         if (scan[i].endsWith('.gif') || scan[i].endsWith('.jpg') || scan[i].endsWith('.png')){
 
@@ -207,6 +208,10 @@ $(document).ready(function(){
           $(imgParent).imagesLoaded( function(){
             scrollBottom();
           });
+        }
+        if (scan[i].startsWith('http') || scan[i].endsWith('.html')){
+          scan[i] = "<a href='" + scan[i] + "' target='_blank'>" + scan[i] + "</a>";
+          child.html(scan.join(' '));
         }
       }
 
