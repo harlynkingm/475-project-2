@@ -36,6 +36,19 @@ MongoClient.connect("mongodb://stresschat:stresschat@ds011943.mlab.com:11943/str
 queue = [];
 connectedCounter = 0;
 
+function isPrevious(previousPartner){
+	if(queue.length == 1){
+		if(previousPartner == queue[0]){
+			return true;
+		}
+	} else if(queue.length == 2){
+		if(previousPartner == queue[1]){
+			return true;
+		}
+	}
+	return false;
+}
+
 
 
 
@@ -52,10 +65,11 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('connectToRoom', function(previousPartner){
-		if(queue.length == 0 || queue[0] == previousPartner){
+		if(queue.length == 0 || isPrevious(previousPartner)){
 			// Should never be more than one, so if its your previous, just put yourself on queue
 			delete socket.partner;
 			queue.push(socket.id);
+			socket.emit('setPartnerFalse');
 			socket.emit('updatechat', socket.id, 'SERVER: Waiting for a partner...');
 		}else{
 			// Grab a partner from queue
@@ -88,6 +102,10 @@ io.on('connection', function(socket){
       io.sockets.in(socket.partner).emit('stop-typing');
     });
 
+	socket.on('message myself', function(){
+		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: No available partners at the moment');
+	})
+
 
 	socket.on('disconnect', function(){
 		connectedCounter--;
@@ -104,7 +122,7 @@ io.on('connection', function(socket){
 
 	socket.on('disconnectingFromPartner', function(id){	
 		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: You have left your partner');
-		socket.broadcast.to(socket.partner).emit('updatechat', socket.partner, "SERVER: Your partner has left the chat.");
+		socket.broadcast.to(id).emit('updatechat', id, "SERVER: Your partner has left the chat.");
 		delete socket.partner;
 		socket.broadcast.to(id).emit('newPartner', socket.id);
 	})

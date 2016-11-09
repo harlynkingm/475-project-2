@@ -41,7 +41,8 @@ $(document).ready(function(){
       if(myPartner){
         socket.emit('disconnectingFromPartner', myPartner);
         socket.emit('connectToRoom', myPartner);
-        myPartner = false;
+      }else{
+        socket.emit('message myself');
       }
     });
 
@@ -133,6 +134,10 @@ $(document).ready(function(){
     
     socket.on('stop-typing', function(){
       $(".message-typing").remove();
+    })
+
+    socket.on('setPartnerFalse', function(){
+      myPartner = false;
     })
 
 
