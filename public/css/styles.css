@@ -224,7 +224,6 @@
   left: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  cursor: pointer;
 }
 
 .center-box {
@@ -251,6 +250,13 @@
 .center-box p {
   margin-top: 15px;
   margin-bottom: 0;
+}
+
+.center-box button {
+  margin-bottom: 0;
+  margin-top: 15px;
+  color: #5696FF;
+  border-color: #5696FF;
 }
 
 .u-center {
