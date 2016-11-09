@@ -94,6 +94,10 @@ io.on('connection', function(socket){
 		io.sockets.in(socket.id).emit('updatechat', socket.id, msg);
 	});
 
+	socket.on('message myself', function(){
+		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: No available partners at the moment');
+	})
+
 
 	socket.on('disconnect', function(){
 		connectedCounter--;

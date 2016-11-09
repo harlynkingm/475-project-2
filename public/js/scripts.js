@@ -40,6 +40,8 @@ $(document).ready(function(){
       if(myPartner){
         socket.emit('disconnectingFromPartner', myPartner);
         socket.emit('connectToRoom', myPartner);
+      }else{
+        socket.emit('message myself');
       }
     });
 
