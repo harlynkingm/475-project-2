@@ -59,6 +59,7 @@ $(document).ready(function(){
           sendMessage($('#m').val());
           $('#m').val('');
           socket.emit('stop-typing');
+          typing = false;
           break;
         default:
           break;
