@@ -40,7 +40,6 @@ $(document).ready(function(){
       if(myPartner){
         socket.emit('disconnectingFromPartner', myPartner);
         socket.emit('connectToRoom', myPartner);
-        myPartner = false;
       }
     });
 
@@ -104,6 +103,10 @@ $(document).ready(function(){
 
     socket.on('newPartner', function(partner){
       socket.emit('connectToRoom', partner);
+    })
+
+    socket.on('setPartnerFalse', function(){
+      myPartner = false;
     })
 
 
