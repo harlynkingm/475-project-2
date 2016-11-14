@@ -5,7 +5,18 @@
   "dependencies": {
     "express": "^4.10.2",
     "mongodb": "*",
-    "socket.io": "^1.5.0"
+    "socket.io": "^1.5.0",
+    "ejs" : "~0.8.5",               
+    "mongoose" : "~3.8.1",          
+    "passport" : "~0.1.17",         
+    "passport-local" : "~0.1.6",
+    "connect-flash" : "~0.1.1",     
+    "bcrypt-nodejs" : "latest",
+    "morgan": "~1.0.0",
+    "body-parser": "~1.0.0",
+    "cookie-parser": "~1.0.0",
+    "method-override": "~1.0.0",
+    "express-session": "~1.0.0" 
   },
   "scripts": {
     "start": "node app.js"

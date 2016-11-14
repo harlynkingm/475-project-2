@@ -4,11 +4,42 @@ var http = require("http").Server(app);
 var io = require('socket.io')(http);
 var path = require('path');
 var mongodb = require('mongodb');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var flash = require('connect-flash');
 
+var morgan = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+
+var configDB = require('./config/database.js');
+
+mongoose.connect(configDB.url);
+
+require('./config/passport')(passport); // pass passport for configuration
+
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser()); // get information from html forms
+
+
+// required for passport
+app.use(session({ secret: '67475cmuchat' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+require('./routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
+
+/*
 
 app.get('/', function(request,response){
 	response.sendFile(__dirname + '/index.html')
 });
+
+*/
 
 app.use(express.static(path.join(__dirname, 'public')));
 
