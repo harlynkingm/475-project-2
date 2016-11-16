@@ -45,7 +45,7 @@ $(document).ready(function(){
     });
 
     function sendMessage(message){
-      if (message.startsWith("SERVER: ") || message.startsWith("HAPPY: ")){
+      if (message.startsWith("SERVER: ") || message.startsWith("HAPPY: ") || message.startsWith("REVEAL: ")){
         message = " " + message;
       }
       if (message){
@@ -164,6 +164,7 @@ $(document).ready(function(){
 
     socket.on('updatechat', function(username, msg){
       var isYou = (username == yourself);
+      var useHTML = false;
 
       // Assigns classes to message text
       var parentClasses = ["msg-container", "row"];
@@ -173,6 +174,12 @@ $(document).ready(function(){
           childClasses.push("message-server");
           childClasses.push("u-noselect");
           msg = msg.split("SERVER: ")[1];
+        } else if (msg.startsWith("REVEAL: ")){
+          childClasses.push("message-server");
+          childClasses.push("u-noselect");
+          childClasses.push("message-reveal")
+          msg = msg.split("REVEAL: ")[1];
+          useHTML = true;
         } else {
           childClasses.push("message-you");
         }
@@ -191,7 +198,11 @@ $(document).ready(function(){
       var parent = $("<div></div>");
       var child = $("<div></div>");
       parent.append(child);
-      child.text(msg);
+      if (useHTML) {
+        child.html(msg);
+      } else {
+        child.text(msg);
+      }
       addClasses(parent, parentClasses);
       addClasses(child, childClasses);
 
