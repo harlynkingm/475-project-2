@@ -136,6 +136,11 @@ io.on('connection', function(socket){
 	socket.on('message myself', function(){
 		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: No available partners at the moment.');
 	})
+    
+    socket.on('reveal', function(user){
+      io.sockets.in(socket.id).emit('updatechat', socket.id, `SERVER: You revealed that you are ${user.name}, an ${user.level} ${user.class} in the ${user.dept} Department!`);
+      io.sockets.in(socket.partner).emit('updatechat', socket.partner, `SERVER: Your partner revealed that they are ${user.name}, an ${user.level} ${user.class} in the ${user.dept} Department!`);
+    })
 
 
 	socket.on('disconnect', function(){

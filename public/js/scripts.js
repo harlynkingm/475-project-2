@@ -1,5 +1,21 @@
 $(document).ready(function(){
   
+  var user = {}
+  
+  $.ajax({
+    url: 'http://apis.scottylabs.org/directory/v1/andrewID/' + localStorage.getItem("username"),
+    success: function(data){
+      user.name = data.first_name + " " + data.last_name;
+      if (Array.isArray(data.department)){
+        user.dept = data.department[0];
+      } else {
+        user.dept = data.department;
+      }
+      user.level = data.student_level;
+      user.class = data.student_class;
+    }
+  });
+  
   var yourself;
   var lastUser;
   myPartner = false;
@@ -44,6 +60,10 @@ $(document).ready(function(){
       }else{
         socket.emit('message myself');
       }
+    });
+    
+    $("#revealYourself").click(function(){
+      socket.emit('reveal', user);
     });
 
     function sendHappy(){

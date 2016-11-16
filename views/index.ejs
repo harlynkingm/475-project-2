@@ -6,17 +6,27 @@
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/skeleton.css">
     <link rel="stylesheet" href="./css/styles.css">
+    <script>
+      localStorage.setItem("username", "<%= username.split("@")[0] %>");
+    </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/jquery-3.1.0.min.js"></script>
     <script src="./js/imagesloaded.pkgd.min.js"></script>
     <script src="./js/scripts.js"></script>
   </head>
   <body>
-
     <div class="sidebar">
       <div class="sidebar-button">
         <div class="title">New Partner</div>
         <div class="image"><img src="./images/icons/plus.png" width=100% id="newPartner"></div>
+      </div>
+      <div class="sidebar-button">
+        <div class="title">Reveal Identity</div>
+        <div class="image"><img src="./images/icons/mask.png" width=100% id="revealYourself"></div>
+      </div>
+      <div class="sidebar-button">
+        <div class="title">Report Partner</div>
+        <div class="image"><img src="./images/icons/alert.png" width=100% id="report"></div>
       </div>
 <!--
       <div class="sidebar-button">
@@ -28,6 +38,10 @@
       <div class="sidebar-button">
         <div class="title">Info</div>
         <div class="image"><img src="./images/icons/info.png" width=100% id="infoButton"></div>
+      </div>
+      <div class="sidebar-button">
+        <div class="title">Logout</div>
+        <div class="image"><a href="/logout"><img src="./images/icons/logout.png" width=100%></a></div>
       </div>
     </div>
     <div class="main">
