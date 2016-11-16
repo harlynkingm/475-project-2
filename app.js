@@ -138,8 +138,8 @@ io.on('connection', function(socket){
 	})
     
     socket.on('reveal', function(user){
-      io.sockets.in(socket.id).emit('updatechat', socket.id, `SERVER: You revealed that you are ${user.name}, an ${user.level} ${user.class} in the ${user.dept} Department!`);
-      io.sockets.in(socket.partner).emit('updatechat', socket.partner, `SERVER: Your partner revealed that they are ${user.name}, an ${user.level} ${user.class} in the ${user.dept} Department!`);
+      io.sockets.in(socket.id).emit('updatechat', socket.id, `REVEAL: You revealed that you are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
+      io.sockets.in(socket.partner).emit('updatechat', socket.partner, `REVEAL: Your partner revealed that they are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
     })
 
 

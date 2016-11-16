@@ -134,6 +134,10 @@
   margin-right: auto;
 }
 
+.message-reveal {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
 .message-img {
   margin-top: 8px;
   display: inline-block;
