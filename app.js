@@ -146,7 +146,7 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		connectedCounter--;
 		io.sockets.emit('connectedUsers', connectedCounter);
-		// Must get rid of solo people from queue when they disconnect
+		// Must get rid of solo people from queue when they disconnect.
 		if(socket.id == queue[0]){
 			index = queue.indexOf(socket.id);
 			queue.splice(index, 1);
