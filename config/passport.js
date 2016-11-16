@@ -11,7 +11,7 @@ var User            = require('../models/userModel');
 function isCMU(email){
     var key = "CMU.EDU";
     var index = email.length - key.length
-    var end = email.substring(index,email.length);
+    var end = email.substring(index,email.length).toUpperCase();
     return key === end;
 };
 
