@@ -25,6 +25,11 @@
   color: inherit;
 }
 
+.title img {
+  height: 30px;
+  margin-top: 15px;
+}
+
 .sidebar {
   background-color: #353535;
   height: 100vh;
@@ -81,8 +86,7 @@
 
 .main .header .title {
   line-height: 60px;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 24px;
   display: inline-block;
   padding-left: 15px;
   padding-right: 15px;
@@ -249,6 +253,7 @@
 .center-box .title {
   padding-bottom: 20px;
   margin-bottom: 10px;
+  font-size: 20px;
 }
 
 .center-box p {
@@ -263,12 +268,49 @@
   border-color: #5696FF;
 }
 
+.btn-carnegie {
+  border: 1px solid #b00;
+  color: #b00;
+}
+
+#login input {
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid #737373;
+  border-top: 1px solid #e1e1e1;
+  margin-bottom: 15px;
+}
+
+#login label {
+  margin-top: 15px;
+}
+
+#login button {
+  margin-top: 15px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.error-msg {
+  margin-bottom: 18px;
+}
+
+.error-msg b{
+  padding: 15px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
 .u-center {
   text-align: center;
 }
 
 .u-right {
   float: right;
+}
+
+.u-bold {
+  font-weight: 600;
 }
 
 .u-noselect {
@@ -278,6 +320,11 @@
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
+}
+
+.u-carnegie {
+  color: #b00;
+  font-weight: bold;
 }
 
 .border-bottom {
