@@ -9,10 +9,7 @@ var User            = require('../models/userModel');
 // expose this function to our app using module.exports
 
 function isCMU(email){
-    var key = "CMU.EDU";
-    var index = email.length - key.length
-    var end = email.substring(index,email.length);
-    return key === end;
+    return email.endsWith("cmu.edu");
 };
 
 module.exports = function(passport) {
@@ -62,9 +59,9 @@ module.exports = function(passport) {
 
             // check to see if theres already a user with that email
             if (user) {
-                return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                return done(null, false, req.flash('loginMessage', 'That email is already taken :('));
             } else if (!isCMU(email)){
-                return done(null, false, req.flash('signupMessage', 'Please register with your CMU email'));
+                return done(null, false, req.flash('loginMessage', 'Please register with your Andrew email address.'));
             }else {
 
                 // if there is no user with that email
@@ -113,7 +110,7 @@ module.exports = function(passport) {
 
             // if no user is found, return the message
             if (!user)
-                return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+                return done(null, false, req.flash('loginMessage', 'If you are new to the site, please register.')); // req.flash is the way to set flashdata using connect-flash
 
             // if the user is found but the password is wrong
             if (!user.validPassword(password))
