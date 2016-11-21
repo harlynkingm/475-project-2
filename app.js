@@ -7,6 +7,7 @@ var mongodb = require('mongodb');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
+var request = require('request');
 
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -83,6 +84,17 @@ function isPrevious(previousPartner){
 
 
 
+function getUserData(id, callback){
+    request('http://apis.scottylabs.org/directory/v1/andrewID/' + id, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+       	return callback(body);
+      }
+    })
+}
+
+
+
+
 io.on('connection', function(socket){
 
 	socket.on('adduser', function(){
@@ -137,7 +149,20 @@ io.on('connection', function(socket){
 		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: No available partners at the moment.');
 	})
     
-    socket.on('reveal', function(user){
+    socket.on('reveal', function(id){
+    	var user = getUserData(id, function(body){
+			user = {};
+			data = JSON.parse(body);
+			user.name = data.first_name + " " + data.last_name;
+			if (Array.isArray(data.department)){
+				user.dept = data.department[0];
+			} else {
+				user.dept = data.department;
+			}
+			user.level = data.student_level;
+			user.class = data.student_class;
+			return user;
+      	});
       io.sockets.in(socket.id).emit('updatechat', socket.id, `REVEAL: You revealed that you are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
       io.sockets.in(socket.partner).emit('updatechat', socket.partner, `REVEAL: Your partner revealed that they are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
     })
