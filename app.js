@@ -86,8 +86,9 @@ function isPrevious(previousPartner){
 
 function getUserData(id, callback){
     request('http://apis.scottylabs.org/directory/v1/andrewID/' + id, function (error, response, body) {
+      console.log(body);
       if (!error && response.statusCode == 200) {
-       	return callback(body);
+       	callback(body);
       }
     })
 }
@@ -150,7 +151,7 @@ io.on('connection', function(socket){
 	})
     
     socket.on('reveal', function(id){
-    	var user = getUserData(id, function(body){
+    	getUserData(id, function(body){
 			user = {};
 			data = JSON.parse(body);
 			user.name = data.first_name + " " + data.last_name;
@@ -161,11 +162,11 @@ io.on('connection', function(socket){
 			}
 			user.level = data.student_level;
 			user.class = data.student_class;
-			return user;
+			io.sockets.in(socket.id).emit('updatechat', socket.id, `REVEAL: You revealed that you are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
+      		io.sockets.in(socket.partner).emit('updatechat', socket.partner, `REVEAL: Your partner revealed that they are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
+    
       	});
-      io.sockets.in(socket.id).emit('updatechat', socket.id, `REVEAL: You revealed that you are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
-      io.sockets.in(socket.partner).emit('updatechat', socket.partner, `REVEAL: Your partner revealed that they are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
-    })
+      })
 
 
 	socket.on('disconnect', function(){
