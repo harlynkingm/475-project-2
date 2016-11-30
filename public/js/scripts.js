@@ -169,6 +169,13 @@ $(document).ready(function(){
       // Assigns classes to message text
       var parentClasses = ["msg-container", "row"];
       var childClasses = ["message"];
+      
+//      switch (type) {
+//        case "SERVER":
+//          break;
+//        case 
+//      }
+      
       if (isYou){
         if (msg.startsWith("SERVER: ")){
           childClasses.push("message-server");
