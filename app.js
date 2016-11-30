@@ -177,16 +177,17 @@ io.on('connection', function(socket){
       	});
       })
 
-    socket.on('reportPartner', function(myself, myPartner){
+    socket.on('reportPartner', function(myself, myPartner, message){
     	// send to the reported user's side to retrieve their id
-    	socket.broadcast.to(myPartner).emit('getID', myself);
+    	socket.broadcast.to(myPartner).emit('getID', myself, message);
     })
 
-    socket.on('report', function(reported, reporter){
-    	message = "User " + reported + " has been reported by " + reporter;
+    socket.on('report', function(reported, reporter, message){
+    	var newMessage = "User " + reported + " has been reported by " + reporter + ". ";
+        newMessage += message;
 		smtpTransport.sendMail({  //email options
 		   from: "carnegieChat <cmuchatverify@gmail.com>", // sender address -- will change later to carnegiechat
-		   to: "<bradchn@gmail.com>", // receiver - we will change this to all our emails (because we are the admins)
+		   to: "<mharlynk@andrew.cmu.edu>", // receiver - we will change this to all our emails (because we are the admins)
 		   subject: "Reported", // subject
 		   text: message // body
 		}, function(error, response){  //callback

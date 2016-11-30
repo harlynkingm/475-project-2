@@ -49,6 +49,10 @@ module.exports = function(passport) {
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(function() {
+          
+        if (req.body.passwordconfirm != password){
+          return done(null, false, req.flash('loginMessage', 'Please confirm your password correctly.'));
+        }
 
         // find a user whose email is the same as the forms email
         // we are checking to see if the user trying to login already exists

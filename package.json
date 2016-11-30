@@ -1,7 +1,7 @@
 {
-  "name": "socket-chat-example",
+  "name": "CarnegieChat",
   "version": "0.0.1",
-  "description": "My first socket.io app",
+  "description": "A new way to anonymously connect with other CMU students",
   "dependencies": {
     "express": "^4.10.2",
     "mongodb": "~2.0",

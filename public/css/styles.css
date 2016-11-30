@@ -317,6 +317,10 @@
   font-weight: 600;
 }
 
+.u-inline {
+  display: inline-block;
+}
+
 .u-noselect {
   cursor: default;
   -webkit-touch-callout: none;

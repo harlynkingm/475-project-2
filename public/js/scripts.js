@@ -7,6 +7,8 @@ $(document).ready(function(){
   var numOfConnected;
   var typing = false;
   
+  $("#report").hide();
+  
   $("#startButton").on("click", function(){
     
     $("#info").fadeOut(400, function(){
@@ -47,14 +49,33 @@ $(document).ready(function(){
       }
     });
 
-    $("#report").click(function(){
+    $("#reportButton").click(function(){
       //sends to server to go fetch my partners andrew id
-      socket.emit('reportPartner', localStorage.getItem("username"), myPartner);
+      $("#report").fadeIn();
     });
     
-    socket.on('getID', function(reporter){
+    $("#report").click(function(){
+      $("#report").fadeOut();
+    });
+    
+    $("#reportPartner").click(function(e){
+      e.preventDefault();
+      var msg = $("#report-form :input[name=reason]").val();
+      var reason = $("#report-form :input[name=report-type]:checked").val();
+      if (msg.length){
+        msg = `User was reported for reason: ${reason}. ` + msg; 
+        socket.emit('reportPartner', localStorage.getItem("username"), myPartner, msg);
+        $("#report").fadeOut();
+      }
+    });
+    
+    $(".center-box").click(function(e){
+      e.stopPropagation();
+    });
+    
+    socket.on('getID', function(reporter, message){
       // send back to the server with my andrew id
-      socket.emit('report', localStorage.getItem("username"), reporter);
+      socket.emit('report', localStorage.getItem("username"), reporter, message);
     })
 
     $("#revealYourself").click(function(){

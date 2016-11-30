@@ -11,6 +11,12 @@ module.exports = function(app, passport) {
         // render the page and pass in any flash data if it exists
         res.render('login.ejs', { message: req.flash('loginMessage') }); 
     });
+  
+    app.get('/signup', function(req, res) {
+
+        // render the page and pass in any flash data if it exists
+        res.render('signup.ejs', { message: req.flash('loginMessage') }); 
+    });
 
     // process the login form
     // app.post('/login', do all our passport stuff here);
@@ -26,7 +32,7 @@ module.exports = function(app, passport) {
 
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect : '/chat',
-        failureRedirect : '/login',
+        failureRedirect : '/signup',
         failureFlash : true // allow flash messages
     }));
 

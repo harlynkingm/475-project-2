@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>CarnegieChat - Log In</title>
+    <title>CarnegieChat - Sign Up</title>
     <link rel="icon" href="./images/icons/favicon.png">
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/skeleton.css">
@@ -11,7 +11,7 @@
 <body>
 <div class="container">
 
-<div style="margin-top:23vh;margin-bottom:20vh">
+<div style="margin-top:20vh;margin-bottom:20vh">
   
   <h1 class="u-center u-noselect" style="margin-bottom:5px"><span class="u-carnegie">carnegie</span>chat</h1>
   <h6 class="u-center u-noselect" style="margin-bottom:30px;">Connecting the CMUnity, one chat at a time.</h6>
@@ -39,10 +39,17 @@
             <input type="password" name="password" class="u-full-width">
         </div>
       </div>
+      <div class="row">
+        <div class="three columns">&nbsp;</div>
+        <div class="six columns">
+            <label>Confirm Password</label>
+            <input type="password" name="passwordconfirm" class="u-full-width">
+        </div>
+      </div>
       
       <div class="row u-center">
-        <button type="submit" formaction="/login" class="btn-carnegie">Login</button>
-        <button type="submit" formaction="/signup">Sign Up</button>
+        <button type="submit" formaction="/signup" class="btn-carnegie">Sign Up</button>
+        <button type="submit" formaction="/login">Login</button>
       </div>
     </form>
 
