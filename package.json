@@ -17,7 +17,8 @@
     "cookie-parser": "~1.0.0",
     "method-override": "~1.0.0",
     "express-session": "~1.0.0",
-    "request": "2.79.0"
+    "request": "2.79.0",
+    "nodemailer": "0.7.1"
   },
   "scripts": {
     "start": "node app.js"

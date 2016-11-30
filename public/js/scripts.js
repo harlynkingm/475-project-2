@@ -46,7 +46,17 @@ $(document).ready(function(){
         socket.emit('message myself');
       }
     });
+
+    $("#report").click(function(){
+      //sends to server to go fetch my partners andrew id
+      socket.emit('reportPartner', localStorage.getItem("username"), myPartner);
+    });
     
+    socket.on('getID', function(reporter){
+      // send back to the server with my andrew id
+      socket.emit('report', localStorage.getItem("username"), reporter);
+    })
+
     $("#revealYourself").click(function(){
       socket.emit('reveal', localStorage.getItem("username"));
     });

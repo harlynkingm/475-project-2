@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
 var request = require('request');
+var nodemailer = require('nodemailer');
 
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -94,6 +95,14 @@ function getUserData(id, callback){
 }
 
 
+var smtpTransport = nodemailer.createTransport("SMTP",{
+   service: "Gmail",  // sets automatically host, port and connection security settings
+   auth: {
+   	// account to send emails from
+       user: "cmuchatverify@gmail.com",
+       pass: "CMUchat67475"
+   }
+});
 
 
 io.on('connection', function(socket){
@@ -168,6 +177,29 @@ io.on('connection', function(socket){
       	});
       })
 
+    socket.on('reportPartner', function(myself, myPartner){
+    	// send to the reported user's side to retrieve their id
+    	socket.broadcast.to(myPartner).emit('getID', myself);
+    })
+
+    socket.on('report', function(reported, reporter){
+    	message = "User " + reported + " has been reported by " + reporter;
+		smtpTransport.sendMail({  //email options
+		   from: "carnegieChat <cmuchatverify@gmail.com>", // sender address -- will change later to carnegiechat
+		   to: "<bradchn@gmail.com>", // receiver - we will change this to all our emails (because we are the admins)
+		   subject: "Reported", // subject
+		   text: message // body
+		}, function(error, response){  //callback
+		   if(error){
+		       console.log(error);
+		   }else{
+		       console.log("Message sent: " + response.message);
+		   }
+		   
+		   smtpTransport.close(); // shut down the connection pool, no more messages.  Comment this line out to continue sending emails.
+		});
+    })
+
 
 	socket.on('disconnect', function(){
 		connectedCounter--;
@@ -190,6 +222,8 @@ io.on('connection', function(socket){
 	})
 
 });
+
+
 
 http.listen(8000, function(){
   console.log('listening on *:8000');
