@@ -9,7 +9,7 @@ var User            = require('../models/userModel');
 // expose this function to our app using module.exports
 
 function isCMU(email){
-    return email.endsWith("cmu.edu");
+    return email.toUpperCase().endsWith("CMU.EDU");
 };
 
 module.exports = function(passport) {

@@ -7,6 +7,8 @@ var mongodb = require('mongodb');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
+var request = require('request');
+var nodemailer = require('nodemailer');
 
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -83,6 +85,26 @@ function isPrevious(previousPartner){
 
 
 
+function getUserData(id, callback){
+    request('http://apis.scottylabs.org/directory/v1/andrewID/' + id, function (error, response, body) {
+      console.log(body);
+      if (!error && response.statusCode == 200) {
+       	callback(body);
+      }
+    })
+}
+
+
+var smtpTransport = nodemailer.createTransport("SMTP",{
+   service: "Gmail",  // sets automatically host, port and connection security settings
+   auth: {
+   	// account to send emails from
+       user: "cmuchatverify@gmail.com",
+       pass: "CMUchat67475"
+   }
+});
+
+
 io.on('connection', function(socket){
 
 	socket.on('adduser', function(){
@@ -137,16 +159,52 @@ io.on('connection', function(socket){
 		io.sockets.in(socket.id).emit('updatechat', socket.id, 'SERVER: No available partners at the moment.');
 	})
     
-    socket.on('reveal', function(user){
-      io.sockets.in(socket.id).emit('updatechat', socket.id, `REVEAL: You revealed that you are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
-      io.sockets.in(socket.partner).emit('updatechat', socket.partner, `REVEAL: Your partner revealed that they are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
+    socket.on('reveal', function(id){
+    	getUserData(id, function(body){
+			user = {};
+			data = JSON.parse(body);
+			user.name = data.first_name + " " + data.last_name;
+			if (Array.isArray(data.department)){
+				user.dept = data.department[0];
+			} else {
+				user.dept = data.department;
+			}
+			user.level = data.student_level;
+			user.class = data.student_class;
+			io.sockets.in(socket.id).emit('updatechat', socket.id, `REVEAL: You revealed that you are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
+      		io.sockets.in(socket.partner).emit('updatechat', socket.partner, `REVEAL: Your partner revealed that they are <b>${user.name}</b>, an <b>${user.level} ${user.class}</b> in the <b>${user.dept} Department!</b>`);
+    
+      	});
+      })
+
+    socket.on('reportPartner', function(myself, myPartner){
+    	// send to the reported user's side to retrieve their id
+    	socket.broadcast.to(myPartner).emit('getID', myself);
+    })
+
+    socket.on('report', function(reported, reporter){
+    	message = "User " + reported + " has been reported by " + reporter;
+		smtpTransport.sendMail({  //email options
+		   from: "carnegieChat <cmuchatverify@gmail.com>", // sender address -- will change later to carnegiechat
+		   to: "<bradchn@gmail.com>", // receiver - we will change this to all our emails (because we are the admins)
+		   subject: "Reported", // subject
+		   text: message // body
+		}, function(error, response){  //callback
+		   if(error){
+		       console.log(error);
+		   }else{
+		       console.log("Message sent: " + response.message);
+		   }
+		   
+		   smtpTransport.close(); // shut down the connection pool, no more messages.  Comment this line out to continue sending emails.
+		});
     })
 
 
 	socket.on('disconnect', function(){
 		connectedCounter--;
 		io.sockets.emit('connectedUsers', connectedCounter);
-		// Must get rid of solo people from queue when they disconnect
+		// Must get rid of solo people from queue when they disconnect.
 		if(socket.id == queue[0]){
 			index = queue.indexOf(socket.id);
 			queue.splice(index, 1);
@@ -164,6 +222,8 @@ io.on('connection', function(socket){
 	})
 
 });
+
+
 
 http.listen(8000, function(){
   console.log('listening on *:8000');
